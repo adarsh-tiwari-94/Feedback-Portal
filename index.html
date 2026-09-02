@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K.K. University Feedback Portal</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --primary-blue: #003366;
+      --secondary-blue: #001a33;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      color: var(--primary-blue);
+    }
+
+    .times-new-roman {
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .header-separator {
+      height: 4px;
+      background-color: var(--secondary-blue);
+      width: 100%;
+      position: fixed;
+      top: 140px;
+      z-index: 51;
+    }
+
+    @media (max-width: 768px) {
+      .header-separator {
+        top: 100px;
+      }
+    }
+
+    .a4-page {
+      width: 100%;
+      max-width: 210mm;
+      min-height: auto;
+      padding: 15mm;
+      margin: 20px auto;
+      background: white;
+      box-shadow: 0 10px 25px -5px rgba(0, 51, 102, 0.1);
+      position: relative;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    @media (min-width: 1024px) {
+      .a4-page {
+        min-height: 297mm;
+        padding: 20mm;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .a4-page {
+        padding: 6mm;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    .responsive-table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 640px) {
+      .responsive-title { font-size: 28pt !important; }
+      .responsive-subtitle { font-size: 18pt !important; }
+      .responsive-section-title { font-size: 16pt !important; }
+    }
+
+    .sidebar-transition {
+      transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    }
+
+    .sidebar-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .sidebar-btn:hover {
+      background-color: #004d99;
+      transform: translateX(5px);
+    }
+
+    .btn-active {
+      background-color: #004488 !important;
+      border-left: 4px solid #ffffff;
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    input[type="text"], input[type="email"], select {
+      color: var(--primary-blue) !important;
+      font-weight: 500;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary-blue) !important;
+      box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+      outline: none;
+    }
+
+    input[type="radio"] {
+      cursor: pointer;
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: var(--primary-blue);
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+      "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+      "react/": "https://esm.sh/react@^19.2.4/",
+      "react": "https://esm.sh/react@^19.2.4"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
