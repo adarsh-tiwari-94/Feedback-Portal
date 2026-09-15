@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, GraduationCap, Star, ArrowRight, CheckCircle2, Trophy } from 'lucide-react';
 import adarshImg from './adarsh.jpeg';
-import shubhamImg from './Shubham.jpeg';
+import shubhamImg from './shubham.jpeg';
 import adityaImg from './aditya.png';
 
 interface HomeSectionProps {

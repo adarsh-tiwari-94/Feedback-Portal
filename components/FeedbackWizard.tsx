@@ -46,6 +46,9 @@ const FeedbackWizard: React.FC<FeedbackWizardProps> = ({ stakeholderType, onComp
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingTeachers, setIsLoadingTeachers] = useState(false);
+  // Verification states
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
     if (basicInfo.domain) {
@@ -67,8 +70,51 @@ const FeedbackWizard: React.FC<FeedbackWizardProps> = ({ stakeholderType, onComp
 
   const totalSteps = stakeholderType === StakeholderType.STUDENT ? 5 : 4;
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isSectionComplete()) {
+      if (
+        step === 1 && 
+        (stakeholderType === StakeholderType.STUDENT || stakeholderType === StakeholderType.ALUMNI || stakeholderType === StakeholderType.PARENT)
+      ) {
+        setIsVerifying(true);
+        setValidationError(null);
+
+        try {
+          const { data: studentRecord, error } = await supabase
+            .from('students')
+            .select('*')
+            .eq('enrollment_no', (basicInfo.enrollmentNo || '').trim())
+            .single();
+
+          if (error || !studentRecord) {
+            setValidationError("Enrollment number not found in our database. Please check and try again.");
+            setIsVerifying(false);
+            return;
+          }
+
+          const inputName = basicInfo.name.trim().toLowerCase();
+          const dbName = studentRecord.name.trim().toLowerCase();
+
+          if (
+            inputName !== dbName ||
+            basicInfo.domain !== studentRecord.domain ||
+            basicInfo.program !== studentRecord.program ||
+            basicInfo.specialization !== studentRecord.specialization
+          ) {
+            setValidationError("The Domain, Program, Specialization, or Name does not match our records for this Enrollment Number.");
+            setIsVerifying(false);
+            return;
+          }
+
+          setValidationError(null);
+        } catch (err) {
+          setValidationError("An error occurred connecting to the database. Please try again.");
+          setIsVerifying(false);
+          return;
+        }
+        setIsVerifying(false);
+      }
+
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -396,18 +442,43 @@ const FeedbackWizard: React.FC<FeedbackWizardProps> = ({ stakeholderType, onComp
         )}
       </div>
 
+      {/* 1. ADD THIS ERROR BANNER ABOVE THE BUTTONS */}
+      {validationError && (
+        <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 font-bold rounded-xl text-sm flex items-center justify-center text-center">
+          {validationError}
+        </div>
+      )}
+
+      {/* 2. UPDATE THE BUTTONS CONTAINER */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-12 pt-8 border-t-2 border-slate-100">
-        <button onClick={handleBack} disabled={step === 1 || isSubmitting} className="w-full sm:w-auto px-10 py-4 border-2 border-[#003366] text-[#003366] font-black rounded-2xl hover:bg-slate-50 disabled:opacity-20 flex items-center justify-center gap-2 transition-all">
+        <button 
+          onClick={handleBack} 
+          disabled={step === 1 || isSubmitting || isVerifying} 
+          className="w-full sm:w-auto px-10 py-4 border-2 border-[#003366] text-[#003366] font-black rounded-2xl hover:bg-slate-50 disabled:opacity-20 flex items-center justify-center gap-2 transition-all"
+        >
           <ArrowLeft size={20} /> PREVIOUS
         </button>
         
         {step === totalSteps ? (
-          <button onClick={handleSubmitAll} disabled={!isSectionComplete() || isSubmitting} className="w-full sm:w-auto px-12 py-5 bg-green-700 text-white font-black text-xl rounded-2xl shadow-2xl hover:bg-green-800 disabled:opacity-20 flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95">
+          <button 
+            onClick={handleSubmitAll} 
+            disabled={!isSectionComplete() || isSubmitting} 
+            className="w-full sm:w-auto px-12 py-5 bg-green-700 text-white font-black text-xl rounded-2xl shadow-2xl hover:bg-green-800 disabled:opacity-20 flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95"
+          >
             {isSubmitting ? <><Loader2 className="animate-spin" /> SUBMITTING...</> : <>SUBMIT FINAL REPORT <CheckCircle size={24} /></>}
           </button>
         ) : (
-          <button onClick={handleNext} disabled={!isSectionComplete()} className="w-full sm:w-auto px-12 py-4 bg-[#003366] text-white font-black rounded-2xl shadow-xl hover:bg-[#002244] disabled:opacity-20 flex items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95">
-            NEXT SECTION <ArrowRight size={20} />
+          <button 
+            onClick={handleNext} 
+            disabled={!isSectionComplete() || isVerifying} 
+            className="w-full sm:w-auto px-12 py-4 bg-[#003366] text-white font-black rounded-2xl shadow-xl hover:bg-[#002244] disabled:opacity-20 flex items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95"
+          >
+            {/* Show Verifying spinner if checking DB, otherwise show Next */}
+            {isVerifying ? (
+              <><Loader2 className="animate-spin" size={20} /> VERIFYING RECORD...</>
+            ) : (
+              <>NEXT SECTION <ArrowRight size={20} /></>
+            )}
           </button>
         )}
       </div>
