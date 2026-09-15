@@ -87,7 +87,7 @@ const FeedbackWizard: React.FC<FeedbackWizardProps> = ({ stakeholderType, onComp
             .single();
 
           if (error || !studentRecord) {
-            setValidationError("Enrollment number not found in our database. Please check and try again.");
+            setValidationError("Enrollment number not found. Please check your credentialsand try again.");
             setIsVerifying(false);
             return;
           }
