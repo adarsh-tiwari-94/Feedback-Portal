@@ -1,8 +1,8 @@
 import React from 'react';
 import { ShieldCheck, GraduationCap, Star, ArrowRight, CheckCircle2, Trophy } from 'lucide-react';
-import riyaImg from './riya.png';
+import adarshImg from './adarsh.jpeg';
+import shubhamImg from './Shubham.jpeg';
 import adityaImg from './aditya.png';
-import snehaImg from './sneha.png';
 
 interface HomeSectionProps {
   onStart: () => void;
@@ -68,9 +68,9 @@ const HomeSection: React.FC<HomeSectionProps> = ({ onStart }) => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { name: 'Aditya Kumar', title: 'B.Ed Topper', session: '2021-23', img: adityaImg },
-              { name: 'Riya Kumari', title: 'B.Tech Topper', session: '2021-25', img: riyaImg },
-              { name: 'Sneha Singh', title: 'B.Pharma Topper', session: '2022-25', img: snehaImg }
+              { name: 'Shubham Anand', title: 'B.Ed Topper', session: '2021-23', img: shubhamImg },
+              { name: 'Adarsh Tiwari', title: 'B.Tech Topper', session: '2021-25', img: adarshImg },
+              { name: 'Aditya Kumar', title: 'B.Pharma Topper', session: '2022-25', img: adityaImg }
             ].map((student, idx) => (
               <div key={idx} className="text-center group bg-slate-50 p-8 rounded-3xl border border-[#003366]/5 shadow-sm hover:shadow-xl transition-all duration-500">
                 <div className="relative w-44 h-44 mx-auto mb-6">
@@ -131,7 +131,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ onStart }) => {
 
         <div className="pt-12 border-t border-[#003366]/10 text-center">
           <p className="text-xs font-bold text-[#003366]/60 uppercase tracking-widest leading-loose">
-            © 2024 K.K. University Quality Assurance Portal<br/>
+            © 2026 K.K. University Quality Assurance Portal<br/>
             Engineered for Academic Excellence • Secured Internal Communications
           </p>
         </div>
